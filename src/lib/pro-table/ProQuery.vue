@@ -43,7 +43,7 @@ const onReload = () => {
       <ACol flex="auto">
         <ARow class="pro-query-main" :gutter="[16, 0]">
           <ACol v-for="x in $_columns" :key="x.dataIndex" :lg="8">
-            <AFormItem :label="(x.title as string)">
+            <AFormItem :label="x.title">
               <template v-if="x.tips" #label>
                 <span>{{ x.title }}</span>
                 <APopover>
