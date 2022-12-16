@@ -14,7 +14,8 @@ interface ProTableColumnValueTypeDataRange {
 
 type ProTableColumnsValueType = ProTableColumnValueTypeText | ProTableColumnValueTypeDataRange;
 
-export interface ProTableColumnData extends Omit<TableColumnData, "titleSlotName"> {
-  valueType?: ValueType;
+interface ProTableColumnsDef {
   tips?: string;
 }
+
+export type ProTableColumnData = ProTableColumnsDef & ProTableColumnsValueType & Omit<TableColumnData, "titleSlotName">;
