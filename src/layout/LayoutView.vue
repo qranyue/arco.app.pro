@@ -1,18 +1,21 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { shallowRef } from "vue";
 import LayoutBreadcrumb from "./LayoutBreadcrumb.vue";
 import LayoutFooter from "./LayoutFooter.vue";
 import LayoutHeader from "./LayoutHeader.vue";
 import LayoutLogo from "./LayoutLogo.vue";
 import LayoutMenu from "./LayoutMenu.vue";
 
-const collapsed = ref<boolean>();
+const collapsed = shallowRef<boolean>();
+const onCollapse = (value: boolean) => {
+  collapsed.value = value;
+};
 </script>
 
 <template>
   <ALayout class="app-layout">
     <AAffix :offset-top="15">
-      <ALayoutSider class="app-sider" collapsible :collapsed="collapsed">
+      <ALayoutSider class="app-sider" breakpoint="lg" collapsible :collapsed="collapsed" @collapse="onCollapse">
         <LayoutLogo />
         <AScrollbar outer-class="app-menu">
           <LayoutMenu />

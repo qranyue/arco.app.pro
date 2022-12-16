@@ -1,8 +1,15 @@
+import type { Auth, MenuMap, MenuParentMap, MenuUrls } from "@/models/design";
+import { getMenu as getMenuAsync } from "@/services/menu";
 import { defineStore } from "pinia";
-import { computed } from "vue";
+import { shallowReactive } from "vue";
 
 export const useMenu = defineStore("menu", () => {
-  return {
-    menu: computed(() => [{ path: "/welcome", title: "欢迎" }]),
+  const menu = shallowReactive({ urls: {} as MenuUrls, list: [] as Auth[], parent: {} as MenuParentMap, map: {} as MenuMap, loading: true });
+
+  const getMenu = async () => {
+    Object.assign(menu, await getMenuAsync());
+    menu.loading = false;
   };
+
+  return { menu, getMenu };
 });

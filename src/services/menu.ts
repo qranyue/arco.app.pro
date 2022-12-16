@@ -1,25 +1,30 @@
-import type { Menu, MenuMap, MenuRes } from "@/models/design";
+import type { Auth, Menu, MenuMap, MenuParentMap, MenuUrls } from "@/models/design";
 import { http, type HttpResponse } from "@/utils/http";
 
-const parseMenu = (list: Menu[], map: MenuMap) => {
-  return list.map<Menu>((x) => {
-    const menu: Menu = { id: x.id, path: x.path, title: x.title };
-    x.icon && (menu.icon = x.icon);
-    map[x.id] && (menu.children = parseMenu(map[x.id]!, map));
-    return menu;
-  });
-};
+export interface MenuRes {
+  parent: string;
+  type: Auth["type"];
+  id: string;
+  path: string;
+  icon: string;
+  title: string;
+  sort: number;
+}
 
 export const getMenu = async () => {
-  const list = (await http.get<HttpResponse<MenuRes[]>>("design/menu")).data.data;
-  list.push({ id: "welcome", parent: "root", icon: "icon-person", path: "/welcome", title: "欢迎", sort: 0 });
-  list.sort((a, b) => (a.sort > b.sort ? 1 : -1));
+  const res = (await http.get<HttpResponse<MenuRes[]>>("design/menu")).data.data;
+  res.push({ id: "welcome", type: "url", parent: "root", icon: "icon-home", path: "/welcome", title: "欢迎", sort: 0 });
+  res.sort((a, b) => (a.sort > b.sort ? 1 : -1));
+  const urls: MenuUrls = {};
   const map: MenuMap = {};
-  list.forEach((x) => {
+  const parent: MenuParentMap = {};
+  res.forEach((x) => {
+    urls[`${x.type}:${x.path}`] = x.id;
+    parent[x.id] = { name: x.title, parent: x.parent };
     if (!map[x.parent]) map[x.parent] = [];
     const menu: Menu = { id: x.id, path: x.path, title: x.title };
     x.icon && (menu.icon = x.icon);
     map[x.parent]!.push(menu);
   });
-  return { list, map, menu: parseMenu(map["root"]!, map) };
+  return { urls, parent, list: res.map<Auth>((x) => ({ type: x.type, value: x.path, name: x.title })), map };
 };

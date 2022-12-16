@@ -1,4 +1,4 @@
-<script lang="tsx" setup>
+<script lang="ts" setup>
 import { computed, inject, reactive } from "vue";
 import { TableColumns, TableLoading, TableOnReload } from "./keys";
 import type { ProTableColumnData } from "./models";
@@ -12,7 +12,7 @@ const $props = defineProps<Props>();
 const _columns = inject(TableColumns);
 const $_columns = computed(() => {
   const cs: ProTableColumnData[] = [];
-  ($props.columns || _columns || []).forEach((x) => {
+  (_columns?.value || $props.columns || []).forEach((x) => {
     if (x.dataIndex) cs.push({ ...x });
   });
   return cs;
