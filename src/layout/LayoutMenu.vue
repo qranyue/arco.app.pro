@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { useMenu } from "@/stores/menu";
+import { useMenuStore } from "@/stores/menu";
 import { useRoute } from "vue-router";
 import { shallowRef, watch } from "vue";
 import LayoutMenuItem from "./LayoutMenuItem.vue";
 
 const $route = useRoute();
 
-const { menu, getMenu } = useMenu();
+const { menu, getMenu } = useMenuStore();
 getMenu();
 
 const open = shallowRef<string[]>([]);
@@ -14,9 +14,9 @@ const selected = shallowRef<string[]>([]);
 watch(
   () => [menu.loading, $route.path],
   () => {
-    console.log($route.path);
     const ids: string[] = [menu.urls[`url:${$route.path}`] || "root"];
-    for (const _key in menu.list) {
+    const len = Object.keys(menu.urls).length;
+    while (ids.length <= len) {
       const p = menu.parent[ids[0]];
       if (!p || p.parent === "root") break;
       ids.splice(0, 0, p.parent);

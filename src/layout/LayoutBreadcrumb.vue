@@ -1,24 +1,33 @@
 <script lang="ts" setup>
-import { useMenu } from "@/stores/menu";
+import { useMenuStore } from "@/stores/menu";
 import { useRoute } from "vue-router";
 import { computed } from "vue";
 import type { MenuParent } from "@/models/design";
 
 const $route = useRoute();
 
-const { menu } = useMenu();
+const { menu } = useMenuStore();
 
 const list = computed(() => {
-  const ls: MenuParent[] = [menu.parent[menu.urls[`url:${$route.path}`]!]!];
+  const ls: MenuParent[] = [];
+  const p = menu.parent[menu.urls[`url:${$route.path}`] || "root"];
+  if (!p) return ls;
+  ls.push(p);
+  const len = Object.keys(menu.urls).length;
+  while (ls.length <= len) {
+    const p = menu.parent[ls[0].parent];
+    if (!p) break;
+    ls.splice(0, 0, p);
+  }
   return ls;
 });
 </script>
 
 <template>
   <ABreadcrumb class="breadcrumb">
-    <ABreadcrumbItem>
+    <ABreadcrumbItem key="root">
       <IconApps />
     </ABreadcrumbItem>
-    <ABreadcrumbItem>欢迎</ABreadcrumbItem>
+    <ABreadcrumbItem v-for="x in list" :key="x.parent">{{ x.name }}</ABreadcrumbItem>
   </ABreadcrumb>
 </template>

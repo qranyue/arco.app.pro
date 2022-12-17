@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { IconFont } from "@/lib/iconfont";
 import type { Menu } from "@/models/design";
-import { useMenu } from "@/stores/menu";
+import { useMenuStore } from "@/stores/menu";
 import { toRef } from "vue";
 import { useRouter } from "vue-router";
 
@@ -12,7 +12,7 @@ interface Props {
 }
 const $props = defineProps<Props>();
 
-const map = toRef(useMenu().menu, "map");
+const map = toRef(useMenuStore().menu, "map");
 
 const onClick = () => {
   $router.push($props.menu.path);
