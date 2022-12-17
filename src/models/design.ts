@@ -1,9 +1,3 @@
-export interface Auth {
-  type: "button" | "url";
-  value: string;
-  name: string;
-}
-
 export type MenuUrls = Partial<Record<string, string>>;
 
 export interface Menu {

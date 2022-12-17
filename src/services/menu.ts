@@ -1,9 +1,9 @@
-import type { Auth, Menu, MenuMap, MenuParentMap, MenuUrls } from "@/models/design";
+import type { Menu, MenuMap, MenuParentMap, MenuUrls } from "@/models/design";
 import { http, type HttpResponse } from "@/utils/http";
 
 export interface MenuRes {
   parent: string;
-  type: Auth["type"];
+  type: "button" | "url";
   id: string;
   path: string;
   icon: string;
@@ -26,5 +26,5 @@ export const getMenu = async () => {
     x.icon && (menu.icon = x.icon);
     map[x.parent]!.push(menu);
   });
-  return { urls, parent, list: res.map<Auth>((x) => ({ type: x.type, value: x.path, name: x.title })), map };
+  return { urls, parent, map };
 };
