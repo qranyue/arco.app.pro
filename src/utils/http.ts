@@ -3,7 +3,7 @@ import axios, { type AxiosResponse } from "axios";
 
 declare module "axios" {
   export interface AxiosRequestConfig {
-    showError?: boolean;
+    showError?: false;
   }
 }
 
@@ -33,7 +33,7 @@ export interface ListError extends HttpError {
 
 http.interceptors.response.use((response: AxiosResponse<HttpError>) => {
   if (!response.data.success) {
-    response.config.showError === true && Message.error({ content: response.data.message });
+    response.config.showError !== false && Message.error({ content: response.data.message });
     throw new Error(response.data.message);
   }
   return response;

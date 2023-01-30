@@ -1,15 +1,16 @@
-import type { TableColumnData } from "@arco-design/web-vue";
+import type { Input, RangePicker, TableColumnData } from "@arco-design/web-vue";
 
-export type ValueType = "text" | "dateRange";
+export type QueryForm = Partial<Record<string, never>>;
 
 interface ProTableColumnValueTypeText {
   valueType?: "text";
-  placeholder?: string;
+  fieldProps?: InstanceType<typeof Input>["$props"];
 }
 
 interface ProTableColumnValueTypeDataRange {
   valueType: "dateRange";
-  placeholder?: [string, string];
+  fieldProps?: InstanceType<typeof RangePicker>["$props"];
+  transform?: (value: [string, string]) => unknown;
 }
 
 type ProTableColumnsValueType = ProTableColumnValueTypeText | ProTableColumnValueTypeDataRange;
@@ -19,4 +20,4 @@ interface ProTableColumnsDef {
   tips?: string;
 }
 
-export type ProTableColumnData = ProTableColumnsDef & ProTableColumnsValueType & Omit<TableColumnData, "title" | "titleSlotName">;
+export type ProTableColumnData = ProTableColumnsDef & ProTableColumnsValueType & Omit<TableColumnData, "title">;
