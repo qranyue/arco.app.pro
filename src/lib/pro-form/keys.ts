@@ -1,6 +1,6 @@
 import { inject, provide, type InjectionKey } from "vue";
 
-type SetValueCallbackType = <T>(value?: T) => void;
+export type SetValueCallbackType = <T>(value?: T) => void;
 export type OnSetValueType = (name: string, callback: SetValueCallbackType) => void;
 const onSetValueKey = Symbol("ON_SET_VALUE") as InjectionKey<OnSetValueType>;
 export const useProvideOnSetValue = (cb: OnSetValueType) => provide(onSetValueKey, cb);

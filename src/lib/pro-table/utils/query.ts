@@ -5,7 +5,7 @@ export const formParse = (columns: ProTableColumnData[], form: QueryForm) => {
   columns.forEach((x) => {
     if ([undefined, null, ""].includes(form[x.dataIndex!])) return;
     if (x.valueType === "dateRange" && x.transform) {
-      Object.assign(parse, x.transform(form[x.dataIndex!]));
+      Object.assign(parse, x.transform(form[x.dataIndex!]! as [string, string]));
     } else parse[x.dataIndex!] = JSON.parse(JSON.stringify(form[x.dataIndex!]));
   });
   return parse;

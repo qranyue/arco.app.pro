@@ -1,14 +1,24 @@
-import { createApp } from "vue";
+import { createApp, type App as Instance } from "vue";
 import { createPinia } from "pinia";
 
-import "./mock";
+if (import.meta.env.DEV) import("./mock");
 
 import App from "./App.vue";
 import router from "./router";
 
-const app = createApp(App);
+let app: Instance;
 
-app.use(createPinia());
-app.use(router);
+export const mount = (el: Element) => {
+  app = createApp(App);
 
-app.mount("#app");
+  app.use(createPinia());
+  app.use(router);
+
+  app.mount(el);
+};
+
+export const unmount = () => {
+  app.unmount();
+};
+
+if (import.meta.env.DEV) mount(document.querySelector("#app")!);

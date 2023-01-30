@@ -43,7 +43,7 @@ const onQuery = () => {
 </script>
 
 <template>
-  <AForm :model="form" label-align="left" :label-col-props="{ xs: 24, md: 8 }" :wrapper-col-props="{ xs: 24, md: 16 }">
+  <AForm :model="form" :label-col-props="{ xs: 24, md: 8 }" :wrapper-col-props="{ xs: 24, md: 16 }">
     <AGrid :collapsed="collapsed" :cols="{ xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }" :col-gap="16">
       <AGridItem v-for="x in $columns" :key="x.dataIndex">
         <AFormItem :label="x.title" :tooltip="x.tips">

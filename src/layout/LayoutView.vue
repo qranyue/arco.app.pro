@@ -32,7 +32,12 @@ const onCollapse = (value: boolean) => {
       <LayoutBreadcrumb class="app-breadcrumb" />
       <ALayoutContent>
         <RouterView v-slot="{ Component }">
-          <component :is="Component" />
+          <Suspense>
+            <template #fallback>
+              <ASpin :size="64" loading></ASpin>
+            </template>
+            <component :is="Component" />
+          </Suspense>
         </RouterView>
       </ALayoutContent>
       <LayoutFooter class="app-footer" />

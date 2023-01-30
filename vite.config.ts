@@ -19,4 +19,9 @@ export default defineConfig({
       less: { javascriptEnabled: true },
     },
   },
+  build: {
+    rollupOptions: {
+      // output: { format: "esm", name: "MicroApp", dir: "dist", file: "main" },
+    },
+  },
 });
