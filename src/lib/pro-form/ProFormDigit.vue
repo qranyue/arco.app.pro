@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Col, FormItem, Input } from "@arco-design/web-vue";
+import type { Col, FormItem, InputNumber } from "@arco-design/web-vue";
 import { computed } from "vue";
 import { useOnChange, useOnSetValue } from "./keys";
 import { useValue } from "./utils/fleid-value";
@@ -7,7 +7,7 @@ import { useValue } from "./utils/fleid-value";
 interface Props {
   colSpan?: number;
   colProps?: InstanceType<typeof Col>["$props"];
-  fieldProps?: Omit<InstanceType<typeof Input>["$props"], "value">;
+  fieldProps?: Omit<InstanceType<typeof InputNumber>["$props"], "value">;
   formProps?: Omit<InstanceType<typeof FormItem>["$props"], "field" | "label" | "rules">;
   name?: string;
   label?: string;
@@ -25,7 +25,7 @@ const $props = withDefaults(defineProps<Props>(), {
 
 const span = computed(() => 24 / $props.colSpan);
 
-const [value, setValue] = useValue<string>($props.name, useOnChange());
+const [value, setValue] = useValue<number>($props.name, useOnChange());
 
 useOnSetValue($props.name, setValue);
 </script>
@@ -33,7 +33,7 @@ useOnSetValue($props.name, setValue);
 <template>
   <ACol :span="span" v-bind="colProps">
     <AFormItem :field="name" :label="label" :rules="rules" v-bind="formProps">
-      <AInput v-model="value" v-bind="fieldProps" />
+      <AInputNumber v-model.number="value" v-bind="fieldProps" />
     </AFormItem>
   </ACol>
 </template>

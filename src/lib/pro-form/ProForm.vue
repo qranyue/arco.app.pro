@@ -17,6 +17,8 @@ const $props = withDefaults(defineProps<Props>(), {
   rowProps: undefined,
 });
 
+const gutter = [0, 16] as [number, number];
+
 const form = reactive<FormType>({});
 useProvideOnChange((name, value) => {
   if (isNull(form[name])) delete form[name];
@@ -37,7 +39,7 @@ onMounted(async () => {
 
 <template>
   <AForm :model="form" v-bind="formProps">
-    <ARow v-bind="rowProps">
+    <ARow :gutter="gutter" v-bind="rowProps">
       <slot></slot>
     </ARow>
   </AForm>

@@ -21,6 +21,7 @@ declare module "@vue/runtime-core" {
     AGrid: typeof import("@arco-design/web-vue")["Grid"];
     AGridItem: typeof import("@arco-design/web-vue")["GridItem"];
     AInput: typeof import("@arco-design/web-vue")["Input"];
+    AInputNumber: typeof import("@arco-design/web-vue")["InputNumber"];
     ALayout: typeof import("@arco-design/web-vue")["Layout"];
     ALayoutContent: typeof import("@arco-design/web-vue")["LayoutContent"];
     ALayoutFooter: typeof import("@arco-design/web-vue")["LayoutFooter"];
