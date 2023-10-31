@@ -23,7 +23,7 @@ watch(
     }
     open.value = ids.slice(0, -1).map((x) => `sub_${x}`);
     selected.value = ids.slice(-1);
-  }
+  },
 );
 </script>
 

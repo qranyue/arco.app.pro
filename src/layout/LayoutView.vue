@@ -51,14 +51,14 @@ const onCollapse = (value: boolean) => {
 @radius: 5px;
 
 .app-layout {
-  padding: @space;
   background: var(--color-fill-1);
+  padding: @space;
 }
 
 .app-sider {
   margin-right: @space;
-  height: calc(100vh - (@space * 2));
   border-radius: @radius;
+  height: calc(100vh - (@space * 2));
   overflow: hidden;
 }
 
@@ -72,9 +72,9 @@ const onCollapse = (value: boolean) => {
 }
 
 .app-header {
-  background: var(--color-bg-2);
   box-shadow: 0 2px 5px 0 rgb(0 0 0 / 8%);
   border-radius: @radius;
+  background: var(--color-bg-2);
 }
 
 .app-breadcrumb {
@@ -83,8 +83,8 @@ const onCollapse = (value: boolean) => {
 
 .app-footer {
   margin-top: @space;
-  text-align: center;
   padding: @space-y 0;
+  text-align: center;
 }
 
 .app-layout :deep(.arco-card) {
