@@ -1,46 +1,33 @@
 <script lang="ts" setup>
-import type { Form, Row } from "@arco-design/web-vue";
-import { onMounted, reactive } from "vue";
-import { useProvideOnChange, useProvideOnSetValue } from "./keys";
-import { isNull } from "./utils/common";
-
-type FormType = Record<string, unknown>;
+import type { Form } from "@arco-design/web-vue";
+import type { FormType } from "./models";
+import { useForm, type UseForm } from "./use-form";
 
 interface Props {
+  form?: UseForm;
   formProps?: Omit<InstanceType<typeof Form>["$props"], "model">;
   request?: () => Promise<FormType>;
-  rowProps?: InstanceType<typeof Row>["$props"];
 }
 const $props = withDefaults(defineProps<Props>(), {
+  form: undefined,
   formProps: undefined,
   request: undefined,
-  rowProps: undefined,
 });
 
-const gutter = [0, 16] as [number, number];
+interface Emits {
+  (event: "finish", form: FormType): void;
+}
+const $emit = defineEmits<Emits>();
 
-const form = reactive<FormType>({});
-useProvideOnChange((name, value) => {
-  if (isNull(form[name])) delete form[name];
-  else if (form[name]) if (form[name] !== value) form[name] = value;
-});
+const { form$, data } = useForm($props.form).register($props.request);
 
-const setValueObject = new Map<string, <T>(value?: T) => void>();
-useProvideOnSetValue((name, callback) => setValueObject.set(name, callback));
-
-onMounted(async () => {
-  if (!$props.request) return;
-  const value: FormType = await $props.request();
-  if (!(value instanceof Object) || value instanceof Function) return console.warn("请返回对象类型");
-  Object.keys(value).forEach((x) => setValueObject.get(x)?.(value[x]));
-  Object.assign(form, value);
-});
+const onFinish = () => {
+  $emit("finish", { ...data });
+};
 </script>
 
 <template>
-  <AForm :model="form" v-bind="formProps">
-    <ARow :gutter="gutter" v-bind="rowProps">
-      <slot></slot>
-    </ARow>
+  <AForm ref="form$" :model="data" v-bind="formProps" @submit-success="onFinish">
+    <slot></slot>
   </AForm>
 </template>

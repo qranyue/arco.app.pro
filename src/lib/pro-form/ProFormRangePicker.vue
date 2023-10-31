@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import type { FormItem, Input } from "@arco-design/web-vue";
+import type { FormItem, RangePicker } from "@arco-design/web-vue";
 import { useField } from "./hooks";
 
 interface Props {
-  fieldProps?: Omit<InstanceType<typeof Input>["$props"], "modelValue">;
+  fieldProps?: Omit<InstanceType<typeof RangePicker>["$props"], "modelValue">;
   formProps?: Omit<InstanceType<typeof FormItem>["$props"], "field" | "label" | "rules">;
   name: string;
   label?: string;
@@ -16,11 +16,11 @@ const $props = withDefaults(defineProps<Props>(), {
   rules: undefined,
 });
 
-const [value] = useField<string>($props.name);
+const [value] = useField<[string, string]>($props.name);
 </script>
 
 <template>
   <AFormItem :field="name" :label="label" :rules="rules" v-bind="formProps">
-    <AInput v-model="value" v-bind="fieldProps" />
+    <ARangePicker v-model="value" v-bind="fieldProps" style="width: 100%" />
   </AFormItem>
 </template>
