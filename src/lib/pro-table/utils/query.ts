@@ -1,12 +1,14 @@
-import type { ProTableColumnData, QueryForm } from "../models";
+import type { ProColumn, QueryForm } from "../models";
+import { isNull } from "./common";
 
-export const formParse = (columns: ProTableColumnData[], form: QueryForm) => {
+export const formParse = (columns: ProColumn[], form: QueryForm) => {
   const parse: QueryForm = {};
-  columns.forEach((x) => {
-    if ([undefined, null, ""].includes(form[x.dataIndex!])) return;
+  for (const x of columns) {
+    const v = form[x.dataIndex];
+    if (isNull(v)) continue;
     if (x.valueType === "dateRange" && x.transform) {
-      Object.assign(parse, x.transform(form[x.dataIndex!]! as [string, string]));
-    } else parse[x.dataIndex!] = JSON.parse(JSON.stringify(form[x.dataIndex!]));
-  });
+      Object.assign(parse, x.transform(v as unknown as [string, string]));
+    } else parse[x.dataIndex] = JSON.parse(JSON.stringify(v));
+  }
   return parse;
 };

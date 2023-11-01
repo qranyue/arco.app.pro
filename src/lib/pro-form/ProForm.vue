@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import type { Form } from "@arco-design/web-vue";
-import type { FormType } from "./models";
+import type { ProFormData } from "./models";
 import { useForm, type UseForm } from "./use-form";
 
 interface Props {
   form?: UseForm;
   formProps?: Omit<InstanceType<typeof Form>["$props"], "model">;
-  request?: () => Promise<FormType>;
+  request?: () => Promise<ProFormData>;
 }
 const $props = withDefaults(defineProps<Props>(), {
   form: undefined,
@@ -15,7 +15,7 @@ const $props = withDefaults(defineProps<Props>(), {
 });
 
 interface Emits {
-  (event: "finish", form: FormType): void;
+  (event: "finish", form: ProFormData): void;
 }
 const $emit = defineEmits<Emits>();
 
