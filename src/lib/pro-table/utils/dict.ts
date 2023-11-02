@@ -17,10 +17,12 @@ export const setDicts = <D extends {}>(cols: ProColumn<D>[], form: D, dicts: Dic
   cols.forEach(async (x) => {
     // 异步内容
     let r: Promise<[string | number, string, (string | number)?][]> | undefined;
-    // 选择器并且有静态配置
+    // 静态配置
     if (x.valueType === "select" && x.option) r = Promise.resolve(x.option);
-    // 选择器并且函数执行，开始获取异步字典
+    if (x.valueType === "treeSelect" && x.option) r = Promise.resolve(x.option);
+    // 函数执行，开始获取异步字典
     if (x.valueType === "select" && x.request) r = x.request(form);
+    if (x.valueType === "treeSelect" && x.request) r = x.request(form);
     // 没有字典
     if (!r) return;
     // 创建字典配置

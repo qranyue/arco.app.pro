@@ -79,6 +79,16 @@ watch(
             allow-clear
             v-bind="x.fieldProps"
           />
+          <ATreeSelect
+            v-else-if="x.valueType === 'treeSelect'"
+            v-model="($form as D)[x.dataIndex]"
+            :placeholder="x.fieldProps?.placeholder || `请选择${x.title}`"
+            :loading="($dicts as Dicts<D>)[x.dataIndex]!.loading"
+            :field-names="{ key: 'value', title: 'label', children: 'children' }"
+            :data="($dicts as Dicts<D>)[x.dataIndex]!.options"
+            allow-clear
+            v-bind="x.fieldProps"
+          />
           <AInput v-else v-model="($form as D)[x.dataIndex]" :placeholder="x.fieldProps?.placeholder || `请输入${x.title}`" allow-clear v-bind="x.fieldProps" />
         </AFormItem>
       </AGridItem>

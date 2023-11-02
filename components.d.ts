@@ -40,6 +40,7 @@ declare module 'vue' {
     ASpin: typeof import('@arco-design/web-vue')['Spin']
     ASubMenu: typeof import('@arco-design/web-vue')['SubMenu']
     ATable: typeof import('@arco-design/web-vue')['Table']
+    ATreeSelect: typeof import('@arco-design/web-vue')['TreeSelect']
     ATypographyText: typeof import('@arco-design/web-vue')['TypographyText']
     IconApps: typeof import('@arco-design/web-vue/es/icon')['IconApps']
     IconDown: typeof import('@arco-design/web-vue/es/icon')['IconDown']

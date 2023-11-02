@@ -6,18 +6,36 @@ import { wait } from "@/utils/wait";
 interface Data {
   text: string;
   select: 0;
+  treeSelect: 0 | 1;
   dataRange?: [string, string];
 }
 
 const columns: ProColumn<Data>[] = [
   { dataIndex: "text", title: "文字", tips: "测试" },
-  { dataIndex: "select", title: "序号", valueType: "select", request: () => new Promise((r) => setTimeout(() => r([[0, "特殊"]]), 5000)) },
+  { dataIndex: "select", title: "列表", valueType: "select", request: () => new Promise((r) => setTimeout(() => r([[0, "特殊"]]), 5000)) },
+  {
+    dataIndex: "treeSelect",
+    title: "树",
+    valueType: "treeSelect",
+    request: () =>
+      new Promise((r) =>
+        setTimeout(
+          () =>
+            r([
+              [0, "一级"],
+              [1, "二级", 0],
+            ]),
+          5000,
+        ),
+      ),
+  },
   { dataIndex: "dataRange", title: "时间范围", valueType: "dateRange", fieldProps: { showTime: true }, transform: (value) => ({ start: value[0], end: value[1] }) },
 ];
 
 interface Query {
   text: string;
   select: 0;
+  treeSelect: 0 | 1;
   start: string;
   end: string;
 }

@@ -1,4 +1,4 @@
-import type { Input, RangePicker, Select, TableChangeExtra, TableColumnData, TableData } from "@arco-design/web-vue";
+import type { Input, RangePicker, Select, TableChangeExtra, TableColumnData, TableData, TreeSelect } from "@arco-design/web-vue";
 
 export type QueryParams<T = {}> = Partial<T> & {
   current: number;
@@ -26,16 +26,23 @@ interface ProTableColumnDateRangeValueType {
 }
 
 type ProColumnOption = [string | number, string, (string | number)?][];
-type ProColumnRequest = <D>(form: D) => Promise<ProColumnOption>;
+type ProColumnRequest<D> = (form: D) => Promise<ProColumnOption>;
 
-interface ProTableColumnSelectValueType {
+interface ProTableColumnSelectValueType<D> {
   valueType: "select";
   fieldProps?: Omit<InstanceType<typeof Select>["$props"], "modelValue" | "allowClear" | "options" | "loading">;
   option?: ProColumnOption;
-  request?: ProColumnRequest;
+  request?: ProColumnRequest<D>;
 }
 
-type ProTableColumnsValueType = ProTableColumnTextValueType | ProTableColumnSelectValueType | ProTableColumnDateRangeValueType;
+interface ProTableColumnTreeSelectValueType<D> {
+  valueType: "treeSelect";
+  fieldProps?: Omit<InstanceType<typeof TreeSelect>["$props"], "modelValue" | "allowClear" | "data" | "fieldNames" | "loading">;
+  option?: ProColumnOption;
+  request?: ProColumnRequest<D>;
+}
+
+type ProTableColumnsValueType<D> = ProTableColumnDateRangeValueType | ProTableColumnTextValueType | ProTableColumnSelectValueType<D> | ProTableColumnTreeSelectValueType<D>;
 
 type TableOmitType = "dataIndex" | "title";
 
@@ -48,4 +55,4 @@ interface ProTableColumnsDef<D> extends Omit<TableColumnData, TableOmitType> {
   hideTable?: boolean;
 }
 
-export type ProColumn<D extends TableData = TableData> = ProTableColumnsDef<D> & ProTableColumnsValueType;
+export type ProColumn<D extends TableData = TableData> = ProTableColumnsDef<D> & ProTableColumnsValueType<D>;
