@@ -1,7 +1,18 @@
-import type { Input, RangePicker, Select, TableColumnData } from "@arco-design/web-vue";
-import type { ProColumnOption, ProColumnRequest } from "./utils/dict";
+import type { Input, RangePicker, Select, TableChangeExtra, TableColumnData, TableData } from "@arco-design/web-vue";
 
-export type QueryForm = Record<string, any>;
+export type QueryParams<T = {}> = Partial<T> & {
+  current: number;
+  pageSize: number;
+};
+export type QuerySorter = TableChangeExtra["sorter"];
+interface AwaitTableData<D> {
+  data: D[];
+  total: number;
+}
+export type ProTableRequest<D extends Record<string, unknown> = Record<string, unknown>, Q extends Record<string, unknown> = {}> = (
+  params: QueryParams<Q>,
+  sorter?: QuerySorter,
+) => Promise<AwaitTableData<D>>;
 
 interface ProTableColumnTextValueType {
   valueType?: "text";
@@ -11,8 +22,11 @@ interface ProTableColumnTextValueType {
 interface ProTableColumnDateRangeValueType {
   valueType: "dateRange";
   fieldProps?: Omit<InstanceType<typeof RangePicker>["$props"], "modelValue" | "allowClear">;
-  transform?: (value: [string, string]) => unknown;
+  transform?: (value: [string, string]) => Record<string, string>;
 }
+
+type ProColumnOption = [string | number, string, (string | number)?][];
+type ProColumnRequest = <D>(form: D) => Promise<ProColumnOption>;
 
 interface ProTableColumnSelectValueType {
   valueType: "select";
@@ -25,8 +39,8 @@ type ProTableColumnsValueType = ProTableColumnTextValueType | ProTableColumnSele
 
 type TableOmitType = "dataIndex" | "title";
 
-interface ProTableColumnsDef extends Omit<TableColumnData, TableOmitType> {
-  dataIndex: string;
+interface ProTableColumnsDef<D> extends Omit<TableColumnData, TableOmitType> {
+  dataIndex: keyof D;
   title?: string;
   tips?: string;
 
@@ -34,4 +48,4 @@ interface ProTableColumnsDef extends Omit<TableColumnData, TableOmitType> {
   hideTable?: boolean;
 }
 
-export type ProColumn = ProTableColumnsDef & ProTableColumnsValueType;
+export type ProColumn<D extends TableData = TableData> = ProTableColumnsDef<D> & ProTableColumnsValueType;

@@ -1,44 +1,48 @@
-<script lang="ts" setup>
+<script lang="ts" setup generic="D extends TableData, Q extends {}">
 import type { PaginationProps, Table, TableChangeExtra, TableData } from "@arco-design/web-vue";
-import { ref, shallowReactive, shallowRef } from "vue";
+import type { UnwrapRef } from "vue";
+import { computed, ref, shallowReactive, shallowRef } from "vue";
+import type { ProColumn, ProTableRequest, QueryParams } from "./models";
 import ProQuery from "./ProQuery.vue";
-import type { ProColumn, QueryForm } from "./models";
-
-interface Params extends QueryForm {
-  current?: number;
-  pageSize?: number;
-}
-interface AwaitTableData {
-  data: TableData[];
-  total: number;
-}
-type TableRequest = (params: Params, sorter: TableChangeExtra["sorter"]) => Promise<AwaitTableData>;
 
 interface Props {
-  params?: QueryForm;
-  columns: ProColumn[];
-  request: TableRequest;
+  params?: Q;
+  columns: ProColumn<D>[];
+  request?: ProTableRequest<D, Q>;
 }
 const $props = withDefaults(defineProps<Props>(), {
-  params: () => ({}),
+  params: () => ({}) as Q,
+  columns: () => [] as ProColumn<D>[],
+  request: async () => ({ data: [], total: 0 }),
+});
+
+const $t_cols = computed(() => {
+  const cols: TableData[] = [];
+  $props.columns.forEach((x) => {
+    if (x.hideTable === true) return;
+    cols.push(x);
+  });
+  return cols;
 });
 
 const $loading = shallowRef(false);
-const $data = ref<TableData[]>([]);
+const $data = ref<D[]>([]);
 
-const $form = shallowRef<QueryForm>({});
+const $form = shallowRef({} as Q);
 const $sorter = shallowRef<TableChangeExtra["sorter"]>();
 const $pagination = shallowReactive<PaginationProps>({
   current: 1,
   pageSize: 10,
+  total: 0,
 });
 
 const query = async () => {
   try {
+    if ($loading.value) return;
     $loading.value = true;
-    const params = { ...$form.value, current: $pagination.current, pageSize: $pagination.pageSize };
+    const params = { ...$form.value, current: $pagination.current!, pageSize: $pagination.pageSize! } as QueryParams;
     const data = await $props.request(params, $sorter.value);
-    $data.value = data.data;
+    $data.value = data.data as UnwrapRef<D[]>;
     $pagination.total = data.total;
   } finally {
     $loading.value = false;
@@ -46,12 +50,15 @@ const query = async () => {
 };
 query();
 
-const onQuery = (params: QueryForm) => {
+const onQuery = (params: Q) => {
   $form.value = { ...params, ...$props.params };
   query();
 };
 
-const onReload = () => {};
+const onReload = () => {
+  $form.value = { ...$props.params };
+  query();
+};
 
 const onTableChange: InstanceType<typeof Table>["onChange"] = (_, extra) => {
   if (extra.page !== $pagination.current) $pagination.current = extra.page;
@@ -63,9 +70,9 @@ const onTableChange: InstanceType<typeof Table>["onChange"] = (_, extra) => {
 
 <template>
   <ACard>
-    <ProQuery :params="params" :loading="$loading" :columns="columns" @query="onQuery" @reload="onReload" />
+    <ProQuery :params="$props.params" :loading="$loading" :columns="columns" @query="onQuery" @reload="onReload" />
   </ACard>
   <ACard style="margin-top: 16px">
-    <ATable :columns="columns" :data="$data" :loading="$loading" @change="onTableChange"></ATable>
+    <ATable :columns="$t_cols" :data="$data" :loading="$loading" :pagination="$pagination" @change="onTableChange"></ATable>
   </ACard>
 </template>
